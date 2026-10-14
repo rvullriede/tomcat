@@ -297,6 +297,12 @@ public class StatementDecoratorInterceptor extends AbstractCreateStatementInterc
             if (compare(TOSTRING_VAL,method)) {
                 return toString();
             }
+            if (compare(EQUALS_VAL, method)) {
+                return Boolean.valueOf(isSameProxy(this, args[0]));
+            }
+            if (compare(HASHCODE_VAL, method)) {
+                return Integer.valueOf(this.hashCode());
+            }
             // was close invoked?
             boolean close = compare(CLOSE_VAL, method);
             // allow close to be called multiple times
@@ -378,6 +384,15 @@ public class StatementDecoratorInterceptor extends AbstractCreateStatementInterc
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if (TOSTRING_VAL.equals(method.getName())) {
+                return toString();
+            }
+            if (EQUALS_VAL.equals(method.getName())) {
+                return Boolean.valueOf(isSameProxy(this, args[0]));
+            }
+            if (HASHCODE_VAL.equals(method.getName())) {
+                return Integer.valueOf(this.hashCode());
+            }
             if (method.getName().equals("getStatement")) {
                 return this.st;
             } else {
@@ -392,6 +407,12 @@ public class StatementDecoratorInterceptor extends AbstractCreateStatementInterc
                     }
                 }
             }
+        }
+
+        @Override
+        public String toString() {
+            return ResultSetProxy.class.getName() + "[Proxy=" + System.identityHashCode(this) + "; Delegate=" +
+                    delegate + ']';
         }
     }
 }

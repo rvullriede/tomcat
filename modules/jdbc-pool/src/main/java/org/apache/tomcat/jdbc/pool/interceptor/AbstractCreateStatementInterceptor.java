@@ -230,6 +230,19 @@ public abstract class AbstractCreateStatementInterceptor extends JdbcInterceptor
     }
 
     /**
+     * Checks whether a proxy is backed by the given invocation handler.
+     *
+     * @param handler the invocation handler of the proxy being compared
+     * @param other   the object passed to {@code equals}
+     *
+     * @return {@code true} if other is a proxy using the given handler
+     */
+    protected static boolean isSameProxy(InvocationHandler handler, Object other) {
+        return other != null && Proxy.isProxyClass(other.getClass()) &&
+                handler.equals(Proxy.getInvocationHandler(other));
+    }
+
+    /**
      * no-op for this interceptor. no state is stored.
      */
     @Override

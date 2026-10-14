@@ -25,6 +25,7 @@ import java.sql.Statement;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.apache.tomcat.jdbc.pool.interceptor.StatementCache;
 import org.apache.tomcat.jdbc.test.driver.Driver;
 
 public class ProxiedResultSetTest extends DefaultTestCase {
@@ -185,6 +186,25 @@ public class ProxiedResultSetTest extends DefaultTestCase {
                 PreparedStatement statement2 = con2.prepareStatement("sql");
                 ResultSet resultSet2 = statement2.executeQuery()) {
             Assert.assertNotEquals(resultSet, resultSet2);
+        }
+    }
+
+    @Test
+    public void shouldHandleIdentityMethodsWhenStatementFacadeIsDisabled() throws SQLException {
+        this.datasource.setDriverClassName(Driver.class.getName());
+        this.datasource.setUrl("jdbc:tomcat:test");
+        this.datasource.setUseStatementFacade(false);
+        this.datasource.setJdbcInterceptors(StatementCache.class.getName());
+        try (Connection con = this.datasource.getConnection();
+                Statement statement = con.createStatement();
+                ResultSet resultSet = statement.executeQuery("")) {
+            Assert.assertEquals(resultSet, resultSet);
+            Assert.assertEquals(resultSet.hashCode(), resultSet.hashCode());
+            Assert.assertNotNull(resultSet.toString());
+            try (ResultSet other = statement.executeQuery("")) {
+                Assert.assertNotEquals(resultSet, other);
+            }
+            Assert.assertNotEquals(resultSet, null);
         }
     }
 }

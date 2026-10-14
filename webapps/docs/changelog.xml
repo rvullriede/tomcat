@@ -708,6 +708,21 @@
   <subsection name="jdbc-pool">
     <changelog>
       <!-- Entries for backport and removal before 12.0.0-M1 below this line -->
+      <fix>
+        <bug>56088</bug>: Ensure that <code>equals()</code>,
+        <code>hashCode()</code> and <code>toString()</code> can be called on a
+        closed statement created by the <code>SlowQueryReport</code>,
+        <code>StatementDecoratorInterceptor</code> or <code>StatementCache</code>
+        interceptors when <code>useStatementFacade</code> is <code>false</code>.
+      </fix>
+      <fix>
+        <bug>59879</bug>: Ensure that <code>toString()</code>,
+        <code>equals()</code> and <code>hashCode()</code> are handled by the
+        <code>ResultSet</code> proxy used by the <code>StatementCache</code> and
+        <code>StatementDecoratorInterceptor</code> interceptors rather than being
+        passed to the underlying <code>ResultSet</code> when
+        <code>useStatementFacade</code> is <code>false</code>.
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
