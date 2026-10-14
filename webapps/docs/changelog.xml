@@ -604,6 +604,11 @@
         Host Manager: Host names are now always converted to lower case before
         use. (markt)
       </fix>
+      <fix>
+        <bug>69617</bug>: Documentation. Note that the memory allocated for
+        request headers is retained by cached processors and is not released
+        when the load drops.
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Tribes">
