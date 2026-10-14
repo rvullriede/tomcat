@@ -20,7 +20,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -116,10 +115,7 @@ public class StatementFacade extends AbstractCreateStatementInterceptor {
                 return toString();
             }
             if (compare(EQUALS_VAL, method)) {
-                if (args[0] == null || !Proxy.isProxyClass(args[0].getClass())) {
-                    return Boolean.FALSE;
-                }
-                return Boolean.valueOf(this.equals(Proxy.getInvocationHandler(args[0])));
+                return Boolean.valueOf(isSameProxy(this, args[0]));
             }
             if (compare(HASHCODE_VAL, method)) {
                 return Integer.valueOf(this.hashCode());
@@ -220,10 +216,7 @@ public class StatementFacade extends AbstractCreateStatementInterceptor {
                 return toString();
             }
             if (compare(EQUALS_VAL, method)) {
-                if (args[0] == null || !Proxy.isProxyClass(args[0].getClass())) {
-                    return Boolean.FALSE;
-                }
-                return Boolean.valueOf(this.equals(Proxy.getInvocationHandler(args[0])));
+                return Boolean.valueOf(isSameProxy(this, args[0]));
             }
             if (compare(HASHCODE_VAL, method)) {
                 return Integer.valueOf(this.hashCode());

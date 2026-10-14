@@ -207,6 +207,15 @@ public abstract class AbstractQueryReport extends AbstractCreateStatementInterce
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             //get the name of the method for comparison
             final String name = method.getName();
+            if (compare(TOSTRING_VAL, name)) {
+                return toString();
+            }
+            if (compare(EQUALS_VAL, name)) {
+                return Boolean.valueOf(isSameProxy(this, args[0]));
+            }
+            if (compare(HASHCODE_VAL, name)) {
+                return Integer.valueOf(this.hashCode());
+            }
             //was close invoked?
             boolean close = compare(CLOSE_VAL, name);
             //allow close to be called multiple times
@@ -260,6 +269,12 @@ public abstract class AbstractQueryReport extends AbstractCreateStatementInterce
                 delegate = null;
             }
             return result;
+        }
+
+        @Override
+        public String toString() {
+            return StatementProxy.class.getName() + "[Proxy=" + System.identityHashCode(this) + "; Query=" + query +
+                    "; Delegate=" + delegate + ']';
         }
     }
 
